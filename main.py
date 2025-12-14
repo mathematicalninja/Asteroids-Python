@@ -21,6 +21,8 @@ def game_loop(
                 return
         log_state()
         screen.fill("black")
+
+        player.update(dt)
         player.draw(screen)
         pygame.display.flip()
         pass
