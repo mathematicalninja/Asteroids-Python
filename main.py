@@ -13,7 +13,8 @@ def game_loop(
     screen: pygame.Surface,  #
     dt: float,
     clock: pygame.time.Clock,
-    player: Player,
+    updatable: pygame.sprite.Group,
+    drawable: pygame.sprite.Group,
 ):
     while True:
         for event in pygame.event.get():
@@ -22,8 +23,10 @@ def game_loop(
         log_state()
         screen.fill("black")
 
-        player.update(dt)
-        player.draw(screen)
+        updatable.update(dt)
+        for sprite in drawable:
+            sprite.draw(screen)
+
         pygame.display.flip()
         pass
 
@@ -45,6 +48,14 @@ def main():
     clock = pygame.time.Clock()
     dt = 0
 
+    # making groups
+    # this has unknown types
+    updatable: pygame.sprite.Group = pygame.sprite.Group()
+    drawable: pygame.sprite.Group = pygame.sprite.Group()
+
+    # setting Player groups
+    Player.containers = (updatable, drawable)
+
     # making the player.
     player = Player(
         x=SCREEN_WIDTH / 2,  #
@@ -56,7 +67,8 @@ def main():
         screen=screen,  #
         dt=dt,
         clock=clock,
-        player=player,
+        updatable=updatable,
+        drawable=drawable,
     )
 
 
