@@ -1,16 +1,27 @@
 import pygame
 
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from logger import log_state
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+
+from player import Player
 
 
-def game_loop(screen: pygame.Surface, dt: float, clock: pygame.time.Clock):
+# I think a better structure would be something along the lines of `while True: state = game_loop(state)`
+
+
+def game_loop(
+    screen: pygame.Surface,  #
+    dt: float,
+    clock: pygame.time.Clock,
+    player: Player,
+):
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
         log_state()
         screen.fill("black")
+        player.draw(screen)
         pygame.display.flip()
         pass
 
@@ -32,11 +43,18 @@ def main():
     clock = pygame.time.Clock()
     dt = 0
 
+    # making the player.
+    player = Player(
+        x=SCREEN_WIDTH / 2,  #
+        y=SCREEN_HEIGHT / 2,
+    )
+
     # calling the game loop, so it's separated.
     game_loop(
         screen=screen,  #
         dt=dt,
         clock=clock,
+        player=player,
     )
 
 
