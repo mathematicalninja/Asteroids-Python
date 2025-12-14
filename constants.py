@@ -4,3 +4,11 @@ PLAYER_RADIUS = 20  # the radius of the player's ship
 LINE_WIDTH = 2  # the width of the lines that draw the player's ship
 PLAYER_TURN_SPEED = 300
 PLAYER_SPEED = 200  # move speed
+
+ASTEROID_MIN_RADIUS = 20
+ASTEROID_KINDS = 3  # how many "stages" of asteroids there are
+ASTEROID_SPAWN_RATE_SECONDS = 0.8
+ASTEROID_MAX_RADIUS = ASTEROID_MIN_RADIUS * ASTEROID_KINDS
+
+SHOT_RADUIS = 5
+PLAYER_SHOT_SPEED = 500

@@ -1,9 +1,16 @@
+import sys
 import pygame
+from pygame.sprite import Group, Sprite
 
-from logger import log_state
+from logger import log_state, log_event
+
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 
+from asteroidfield import AsteroidField
+
+from asteroid import Asteroid
 from player import Player
+from shot import Shot
 
 
 # I think a better structure would be something along the lines of `while True: state = game_loop(state)`
@@ -13,8 +20,11 @@ def game_loop(
     screen: pygame.Surface,  #
     dt: float,
     clock: pygame.time.Clock,
-    updatable: pygame.sprite.Group,
-    drawable: pygame.sprite.Group,
+    updatable,
+    drawable,
+    asteroids,
+    player: Player,
+    shots,
 ):
     while True:
         for event in pygame.event.get():
@@ -27,8 +37,16 @@ def game_loop(
         for sprite in drawable:
             sprite.draw(screen)
 
+        for asteroid in asteroids:
+            if player.collides(asteroid):
+                log_event("player_hit")
+                print("Game over!")
+                sys.exit()
         pygame.display.flip()
         pass
+
+        for shot in shots:
+            pass
 
         ticked = clock.tick(60)
         dt = ticked / 1000
@@ -50,11 +68,23 @@ def main():
 
     # making groups
     # this has unknown types
-    updatable: pygame.sprite.Group = pygame.sprite.Group()
-    drawable: pygame.sprite.Group = pygame.sprite.Group()
+    updatable = Group()
+    drawable = Group()
+    asteroids = Group()
+    shots = Group()
 
     # setting Player groups
-    Player.containers = (updatable, drawable)
+    Player.containers = [updatable, drawable]
+
+    # setting up Asteroids
+    Asteroid.containers = [updatable, drawable, asteroids]
+    AsteroidField.containers = [updatable]
+
+    # setting up shots
+    Shot.containers = [updatable, drawable, shots]
+
+    # making the field
+    asteroid_field = AsteroidField()
 
     # making the player.
     player = Player(
@@ -69,6 +99,9 @@ def main():
         clock=clock,
         updatable=updatable,
         drawable=drawable,
+        asteroids=asteroids,
+        player=player,
+        shots=shots,
     )
 
 

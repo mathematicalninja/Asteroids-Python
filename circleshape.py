@@ -1,3 +1,6 @@
+# to allow CircleShape to reference CircleShape
+from __future__ import annotations
+
 import pygame
 
 
@@ -10,9 +13,9 @@ class CircleShape(pygame.sprite.Sprite):
         else:
             super().__init__()
 
-        self.position = pygame.Vector2(x, y)
-        self.velocity = pygame.Vector2(0, 0)
-        self.radius = radius
+        self.position: pygame.Vector2 = pygame.Vector2(x, y)
+        self.velocity: pygame.Vector2 = pygame.Vector2(0, 0)
+        self.radius: float = radius
 
     def draw(self, screen: pygame.Surface):
         # must override
@@ -21,3 +24,12 @@ class CircleShape(pygame.sprite.Sprite):
     def update(self, dt: float):
         # must override
         pass
+
+    def collides(self, other: CircleShape) -> bool:
+        distance = self.position.distance_to(other.position)
+        total_radii = self.radius + other.radius
+
+        # soft edges to allow "skin of the teeth" flying.
+        if distance < total_radii:
+            return True
+        return False
