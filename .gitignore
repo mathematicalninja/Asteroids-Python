@@ -10,4 +10,4 @@ wheels/
 .venv
 
 # logging
-game_state.jsonl
+*.jsonl
