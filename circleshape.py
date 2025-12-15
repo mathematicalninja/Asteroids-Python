@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import pygame
-from pygame import Vector2
 
 
 # Base class for game objects
@@ -25,9 +24,6 @@ class CircleShape(pygame.sprite.Sprite):
     def update(self, dt: float):
         # must override
         pass
-
-    def get_rotation_vector(self) -> Vector2:
-        return Vector2(0, 1).rotate(self.rotation)
 
     def collides(self, other: CircleShape) -> bool:
         distance = self.position.distance_to(other.position)

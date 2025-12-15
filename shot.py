@@ -15,6 +15,8 @@ class Shot(CircleShape):
         super().__init__(pos.x, pos.y, radius)
 
         self.velocity: pygame.Vector2 = unit_velocity * inital_speed
+        self.unit_velocity = unit_velocity
+        self.speed = inital_speed
 
     def draw(self, screen: pygame.Surface):
         pygame.draw.circle(
