@@ -1,5 +1,6 @@
 import sys
 import pygame
+from pygame.math import Vector2
 from pygame.sprite import Group, Sprite
 
 from logger import log_state, log_event
@@ -42,11 +43,16 @@ def game_loop(
                 log_event("player_hit")
                 print("Game over!")
                 sys.exit()
-        pygame.display.flip()
-        pass
+            for shot in shots:
+                if shot.collides(asteroid):
+                    log_event("asteroid_shot")
 
-        for shot in shots:
-            pass
+                    asteroid.split(shot)
+                    shot.kill()
+                    pass
+                pass
+
+        pygame.display.flip()
 
         ticked = clock.tick(60)
         dt = ticked / 1000
@@ -87,10 +93,12 @@ def main():
     asteroid_field = AsteroidField()
 
     # making the player.
-    player = Player(
+    screen_center: Vector2 = Vector2(
         x=SCREEN_WIDTH / 2,  #
         y=SCREEN_HEIGHT / 2,
     )
+
+    player = Player(screen_center)
 
     # calling the game loop, so it's separated.
     game_loop(

@@ -3,6 +3,7 @@ from circleshape import CircleShape
 from constants import (
     PLAYER_RADIUS,
     LINE_WIDTH,
+    PLAYER_SHOT_COOLDOWN_SECONDS,
     PLAYER_SHOT_SPEED,
     PLAYER_SPEED,
     PLAYER_TURN_SPEED,
@@ -14,9 +15,10 @@ from shot import Shot
 
 
 class Player(CircleShape):
-    def __init__(self, x: float, y: float):
-        super().__init__(x=x, y=y, radius=PLAYER_RADIUS)
+    def __init__(self, pos: Vector2):
+        super().__init__(x=pos.x, y=pos.y, radius=PLAYER_RADIUS)
         self.rotation: float = 0
+        self.time_since_last_shot = 0
         pass
 
     def triangle(self):
@@ -67,6 +69,9 @@ class Player(CircleShape):
         if keys[pygame.K_n]:
             self.shoot()
 
+        if self.time_since_last_shot >= 0:
+            self.time_since_last_shot -= dt
+
     def move(self, dt: float):
         self.position += self.get_rotation_vector() * PLAYER_SPEED * dt
 
@@ -74,12 +79,14 @@ class Player(CircleShape):
         return Vector2(0, 1).rotate(self.rotation)
 
     def shoot(self):
+        if self.time_since_last_shot > 0:
+            return
         rotation_vector = self.get_rotation_vector()
         pos = self.position + rotation_vector * self.radius
         shot = Shot(
-            x=pos.x,  #
-            y=pos.y,
-            velocity=self.get_rotation_vector() * PLAYER_SHOT_SPEED,
+            pos=pos,
+            inital_speed=PLAYER_SHOT_SPEED,
+            unit_velocity=self.get_rotation_vector(),
             radius=SHOT_RADUIS,
         )
-        return shot
+        self.time_since_last_shot = PLAYER_SHOT_COOLDOWN_SECONDS

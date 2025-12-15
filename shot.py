@@ -1,4 +1,5 @@
 import pygame
+from pygame.math import Vector2
 from circleshape import CircleShape
 from constants import LINE_WIDTH, SHOT_RADUIS
 
@@ -6,14 +7,14 @@ from constants import LINE_WIDTH, SHOT_RADUIS
 class Shot(CircleShape):
     def __init__(
         self,  #
-        x: float,
-        y: float,
-        velocity: pygame.Vector2,
+        pos: Vector2,
+        inital_speed: float,
+        unit_velocity: pygame.Vector2,
         radius: float = SHOT_RADUIS,  # allows varied shot sizes.
     ):
-        super().__init__(x, y, radius)
+        super().__init__(pos.x, pos.y, radius)
 
-        self.velocity: pygame.Vector2 = velocity
+        self.velocity: pygame.Vector2 = unit_velocity * inital_speed
 
     def draw(self, screen: pygame.Surface):
         pygame.draw.circle(
